@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FontRenderer.Data;
+using FontRenderer.Entities;
 using OpenTK;
 
 namespace FontRenderer.Shaders
@@ -9,6 +11,7 @@ namespace FontRenderer.Shaders
     {
         private int projectionMatrixLocation;
         private int modelMatrixLocation;
+        private int lineLengthLocation;
         protected override void BindAttribLocations()
         {
             this.BindAttribLocation(0, "position");
@@ -19,6 +22,7 @@ namespace FontRenderer.Shaders
         {
             this.projectionMatrixLocation = this.GetUniformLocation("projectionMatrix");
             this.modelMatrixLocation = this.GetUniformLocation("modelMatrix");
+            this.lineLengthLocation = this.GetUniformLocation("lineLength");
         }
 
         protected override void LoadShaders()
@@ -38,6 +42,11 @@ namespace FontRenderer.Shaders
         public void LoadModelMatrix(Matrix4 model)
         {
             this.LoadMatrix4(model, this.modelMatrixLocation);
+        }
+
+        public void LoadTextData(AlignedText text)
+        {
+            this.LoadFloat(text.LineLength / (float)text.FontSize, this.lineLengthLocation);
         }
     }
 }

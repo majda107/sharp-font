@@ -73,5 +73,10 @@ namespace FontRenderer.Shaders
         {
             GL.UniformMatrix4(location, false, ref mat);
         }
+
+        protected void LoadFloat(float value, int location)
+        {
+            GL.Uniform1(location, value);
+        }
     }
 }

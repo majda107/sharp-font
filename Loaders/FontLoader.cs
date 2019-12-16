@@ -27,7 +27,14 @@ namespace FontRenderer.Loaders
                         switch (split[0])
                         {
                             case "info":
-                                var size = int.Parse(split[3].Split('=')[1]);
+
+                                int size = 0;
+                                for (int i = 0; i < split.Length; i++)
+                                    if(split[i].Contains("size"))
+                                    {
+                                        size = int.Parse(split[i].Split('=')[1]);
+                                        break;
+                                    }
 
                                 line = sr.ReadLine();
                                 split = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);

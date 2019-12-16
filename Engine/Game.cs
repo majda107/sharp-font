@@ -76,7 +76,8 @@ namespace FontRenderer.Engine
             this.TextureLoader = new TextureLoader();
             this.FontMeshBuilder = new FontMeshBuilder();
 
-            this.Font = this.FontLoader.Load(this.TextureLoader, "../../../res/Montserrat_high.fnt", "../../../res/Montserrat_high.png");
+            //this.Font = this.FontLoader.Load(this.TextureLoader, "../../../res/Montserrat_high.fnt", "../../../res/Montserrat_high.png");
+            this.Font = this.FontLoader.Load(this.TextureLoader, "../../../res/Montserrat_sdf.fnt", "../../../res/Montserrat_sdf.png");
 
 
 
@@ -112,6 +113,7 @@ namespace FontRenderer.Engine
             model *= Matrix4.CreateTranslation(this.alignedText.Position);
 
             this.Shader.LoadModelMatrix(model);
+            this.Shader.LoadTextData(this.alignedText);
 
             GL.BindVertexArray(this.alignedText.Mesh.Id);
 
