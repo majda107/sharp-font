@@ -144,7 +144,7 @@ namespace FontRenderer.Builders
                         break;
                 }
 
-                this.BuildLine(currentLine, vertexBuffer, textureCoordBuffer, font, cursor);
+                this.BuildLine(currentLine, vertexBuffer, textureCoordBuffer, font, cursor, alignedText.LetterPadding);
 
                 currentLine = String.Empty;
                 lineSum = 0;
@@ -176,11 +176,10 @@ namespace FontRenderer.Builders
             mesh.UpdateCoords(vertices, textureCoords);
         }
 
-        private void BuildLine(string text, List<Vector2> vertexBuffer, List<Vector2> textureCoordBuffer, Font font, Vector2 cursor)
+        private void BuildLine(string text, List<Vector2> vertexBuffer, List<Vector2> textureCoordBuffer, Font font, Vector2 cursor, float letterPadding)
         {
-            float padding = 5f;
-            float localPadding = padding / (float)font.GivenSize;
-            float texturePadding = padding / (float)font.AtlasWidth;
+            float localPadding = letterPadding / (float)font.GivenSize;
+            float texturePadding = letterPadding / (float)font.AtlasWidth;
 
             foreach(var character in text)
             {

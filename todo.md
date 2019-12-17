@@ -1,2 +1,1 @@
-﻿1.] Change texture atlas to sdf atlas
-2.] Rewrite 
+﻿1) Better padding solution (in case of SDF even text will need padding, so give it there, also set padding in font-mesh building for basic text)

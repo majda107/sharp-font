@@ -12,7 +12,6 @@ using FontRenderer.Shaders;
 using OpenTK;
 using FontRenderer.Entities;
 using OpenTK.Input;
-using FontRenderer.Data;
 
 namespace FontRenderer.Engine
 {
@@ -32,6 +31,8 @@ namespace FontRenderer.Engine
         //private Text fontEntity;
         private AlignedText alignedText;
 
+        private string textString;
+
         public Game()
         {
             this.Display = new Display(1280, 720);
@@ -43,29 +44,48 @@ namespace FontRenderer.Engine
             this.Display.Load += Init;
             this.Display.RenderFrame += RenderFrame;
 
-            string text = "";
-            //this.Display.KeyDown += (o, e) =>
-            //{
-            //    switch(e.Key)
-            //    {
-            //        case Key.BackSpace:
-            //            if (text.Length > 0)
-            //                text = text.Substring(0, text.Length-1);
-            //            break;
+            this.Display.KeyDown += (o, e) =>
+            {
+                switch (e.Key)
+                {
+                    case Key.BackSpace:
+                        if (this.textString.Length > 0)
+                            this.textString = this.textString.Substring(0, this.textString.Length - 1);
+                        break;
 
-            //        case Key.Enter:
-            //            text += '\n';
-            //            break;
-            //    }
+                    case Key.Enter:
+                        this.textString += '\n';
+                        break;
 
-            //    this.FontMeshBuilder.Build(this.fontEntity.Mesh, text.ToString());
-            //};
+                    case Key.Left:
+                        this.alignedText.Align = Align.Left;
+                        break;
 
-            //this.Display.KeyPress += (o, e) =>
-            //{
-            //    text += e.KeyChar;
-            //    this.FontMeshBuilder.Build(this.fontEntity.Mesh, text.ToString());
-            //};
+                    case Key.Right:
+                        this.alignedText.Align = Align.Right;
+                        break;
+
+                    case Key.Up:
+                        this.alignedText.Align = Align.Center;
+                        break;
+
+                    case Key.Minus:
+                        this.alignedText.FontSize -= 1f;
+                        break;
+
+                    case Key.Plus:
+                        this.alignedText.FontSize += 1f;
+                        break;
+                }
+
+                this.FontMeshBuilder.Build(this.alignedText, this.textString);
+            };
+
+            this.Display.KeyPress += (o, e) =>
+            {
+                this.textString += e.KeyChar;
+                this.FontMeshBuilder.Build(this.alignedText, this.textString);
+            };
         }
 
         private void Init(object sender, EventArgs e)
@@ -84,8 +104,10 @@ namespace FontRenderer.Engine
             //this.fontEntity = new Text(this.Font, new Vector3(10, this.Display.Height/2, 0), 100);
             //this.FontMeshBuilder.Build(this.fontEntity.Mesh, "ahoj uwu nuzzles");
 
-            this.alignedText = new AlignedText(this.Font, new Vector3(0, this.Display.Height, 0), this.Display.Width, Align.Center, 100);
-            this.FontMeshBuilder.Build(this.alignedText, "hahahahahahahahahahaha\n\nlol");
+            this.alignedText = new AlignedText(this.Font, new Vector3(0, this.Display.Height, 0), this.Display.Width, 5f, Align.Center, 100);
+
+            this.textString = "hahahahahahahahahahaha\n\nlol";
+            this.FontMeshBuilder.Build(this.alignedText, textString);
 
 
 
