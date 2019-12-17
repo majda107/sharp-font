@@ -8,7 +8,7 @@ out vec4 out_Color;
 uniform sampler2D textureSampler;
 
 float width = 0.475;
-float edge = 0.015;
+float edge = 0.05;
 
 void main(void)
 {

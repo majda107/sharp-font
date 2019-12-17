@@ -157,6 +157,10 @@ namespace FontRenderer.Builders
 
         private void BuildLine(string text, List<Vector2> vertexBuffer, List<Vector2> textureCoordBuffer, Font font, Vector2 cursor)
         {
+            float padding = 5f;
+            float localPadding = padding / (float)font.GivenSize;
+            float texturePadding = padding / (float)font.AtlasWidth;
+
             foreach(var character in text)
             {
                 var data = font.Data[character];
@@ -172,6 +176,11 @@ namespace FontRenderer.Builders
                 vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth, cursor.Y - localOffset.Y - localHeight)); // bottom right
                 vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth, cursor.Y - localOffset.Y)); // top right
 
+                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localPadding, cursor.Y - localOffset.Y - localPadding)); // top left
+                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localPadding, cursor.Y - localOffset.Y - localHeight + localPadding)); // bottom left
+                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth - localPadding, cursor.Y - localOffset.Y - localHeight + localPadding)); // bottom right
+                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth - localPadding, cursor.Y - localOffset.Y - localPadding)); // top right
+
 
                 // TEXTURE COORDS
 
@@ -179,12 +188,12 @@ namespace FontRenderer.Builders
                 float textureWidth = (float)data.Width / (float)font.AtlasWidth;
                 float textureHeight = (float)data.Height / (float)font.AtlasHeight;
 
-                textureCoordBuffer.Add(new Vector2(texturePosition.X, texturePosition.Y)); // top left
-                textureCoordBuffer.Add(new Vector2(texturePosition.X, texturePosition.Y + textureHeight)); // bottom left
-                textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth, texturePosition.Y + textureHeight)); // bottom right
-                textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth, texturePosition.Y)); // top right
+                textureCoordBuffer.Add(new Vector2(texturePosition.X + texturePadding, texturePosition.Y + texturePadding)); // top left
+                textureCoordBuffer.Add(new Vector2(texturePosition.X + texturePadding, texturePosition.Y + textureHeight - texturePadding)); // bottom left
+                textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth - texturePadding, texturePosition.Y + textureHeight - texturePadding)); // bottom right
+                textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth - texturePadding, texturePosition.Y + texturePadding)); // top right
 
-                cursor.X += (float)data.Xadvance / (float)font.GivenSize;
+                cursor.X += (float)data.Xadvance / ((float)font.GivenSize);
             }    
         }
     }
