@@ -29,11 +29,11 @@ namespace FontRenderer.Data
 
         public void Add(char character, CharData data) => this.Data.Add(character, data);
 
-        public int GetLineLength(string text)
+        public float GetLineLength(string text)
         {
-            int length = 0;
+            float length = 0;
             foreach (var character in text)
-                length += this.Data[character].Width;
+                length += this.Data[character].LocalWidth;
 
             return length;
         }

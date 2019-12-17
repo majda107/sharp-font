@@ -51,7 +51,8 @@ namespace FontRenderer.Loaders
                                     int.Parse(split[4].Split('=')[1]),
                                     int.Parse(split[5].Split('=')[1]),
                                     new Vector2(int.Parse(split[6].Split('=')[1]), int.Parse(split[7].Split('=')[1])),
-                                    int.Parse(split[8].Split('=')[1])
+                                    int.Parse(split[8].Split('=')[1]),
+                                    data.GivenSize
                                 ));
                                 break;
                         }

@@ -28,36 +28,57 @@ namespace FontRenderer.Builders
 
                 var data = font.Data[character];
 
-                // WORKING WITHOUT SCALING, DON'T TOUCH
-                //vertexBuffer.Add(new Vector2(cursor + data.Offset.X, font.GivenSize - data.Offset.Y)); // top left
-                //vertexBuffer.Add(new Vector2(cursor + data.Offset.X, font.GivenSize - data.Offset.Y - data.Height)); // bottom left
-                //vertexBuffer.Add(new Vector2(cursor + data.Offset.X + data.Width, font.GivenSize - data.Offset.Y - data.Height)); // bottom right
-                //vertexBuffer.Add(new Vector2(cursor + data.Offset.X + data.Width, font.GivenSize - data.Offset.Y)); // top right
+                //// WORKING WITHOUT SCALING, DON'T TOUCH
+                ////vertexBuffer.Add(new Vector2(cursor + data.Offset.X, font.GivenSize - data.Offset.Y)); // top left
+                ////vertexBuffer.Add(new Vector2(cursor + data.Offset.X, font.GivenSize - data.Offset.Y - data.Height)); // bottom left
+                ////vertexBuffer.Add(new Vector2(cursor + data.Offset.X + data.Width, font.GivenSize - data.Offset.Y - data.Height)); // bottom right
+                ////vertexBuffer.Add(new Vector2(cursor + data.Offset.X + data.Width, font.GivenSize - data.Offset.Y)); // top right
 
 
-                var localOffset = new Vector2(data.Offset.X / (float)font.GivenSize, data.Offset.Y / (float)font.GivenSize);
-                var localHeight = (float)data.Height / (float)font.GivenSize;
-                var localWidth = (float)data.Width / (float)font.GivenSize;
+                //var localOffset = new Vector2(data.Offset.X / (float)font.GivenSize, data.Offset.Y / (float)font.GivenSize);
+                //var localHeight = (float)data.Height / (float)font.GivenSize;
+                //var localWidth = (float)data.Width / (float)font.GivenSize;
 
-                vertexBuffer.Add(new Vector2(cursor.X + localOffset.X, cursor.Y - localOffset.Y)); // top left
-                vertexBuffer.Add(new Vector2(cursor.X + localOffset.X, cursor.Y - localOffset.Y - localHeight)); // bottom left
-                vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth, cursor.Y - localOffset.Y - localHeight)); // bottom right
-                vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth, cursor.Y - localOffset.Y)); // top right
+                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X, cursor.Y - localOffset.Y)); // top left
+                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X, cursor.Y - localOffset.Y - localHeight)); // bottom left
+                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth, cursor.Y - localOffset.Y - localHeight)); // bottom right
+                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth, cursor.Y - localOffset.Y)); // top right
 
 
 
+
+                //Vector2 texturePosition = new Vector2(data.Position.X / font.AtlasWidth, data.Position.Y / font.AtlasHeight);
+                //float textureWidth = (float)data.Width / (float)font.AtlasWidth;
+                //float textureHeight = (float)data.Height / (float)font.AtlasHeight;
+
+                //textureCoordBuffer.Add(new Vector2(texturePosition.X, texturePosition.Y)); // top left
+                //textureCoordBuffer.Add(new Vector2(texturePosition.X, texturePosition.Y + textureHeight)); // bottom left
+                //textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth, texturePosition.Y + textureHeight)); // bottom right
+                //textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth, texturePosition.Y)); // top right
+
+                // VERTICES
+
+                vertexBuffer.Add(new Vector2(cursor.X + data.LocalOffset.X, cursor.Y - data.LocalOffset.Y)); // top left
+                vertexBuffer.Add(new Vector2(cursor.X + data.LocalOffset.X, cursor.Y - data.LocalOffset.Y - data.LocalHeight)); // bottom left
+                vertexBuffer.Add(new Vector2(cursor.X + data.LocalOffset.X + data.LocalWidth, cursor.Y - data.LocalOffset.Y - data.LocalHeight)); // bottom right
+                vertexBuffer.Add(new Vector2(cursor.X + data.LocalOffset.X + data.LocalWidth, cursor.Y - data.LocalOffset.Y)); // top right
+
+
+
+
+                // TEXTURE COORDS
 
                 Vector2 texturePosition = new Vector2(data.Position.X / font.AtlasWidth, data.Position.Y / font.AtlasHeight);
-                float textureWidth = (float)data.Width / (float)font.AtlasWidth;
-                float textureHeight = (float)data.Height / (float)font.AtlasHeight;
+                float textureWidth = (float)data.LocalWidth * font.GivenSize / (float)font.AtlasWidth;
+                float textureHeight = (float)data.LocalHeight * font.GivenSize / (float)font.AtlasHeight;
 
                 textureCoordBuffer.Add(new Vector2(texturePosition.X, texturePosition.Y)); // top left
                 textureCoordBuffer.Add(new Vector2(texturePosition.X, texturePosition.Y + textureHeight)); // bottom left
                 textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth, texturePosition.Y + textureHeight)); // bottom right
                 textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth, texturePosition.Y)); // top right
 
-                //cursor += data.Xadvance;
-                cursor.X += (float)data.Xadvance / (float)font.GivenSize;
+                //cursor.X += (float)data.Xadvance / (float)font.GivenSize;
+                cursor.X += data.LocalXadvance;
             }
 
             float[] vertices = new float[vertexBuffer.Count * 2];
@@ -102,7 +123,7 @@ namespace FontRenderer.Builders
             {
                 var character = text[i];
 
-                var charLength = (float)font.Data[character].Xadvance /(float)font.GivenSize;
+                var charLength = font.Data[character].LocalXadvance;
 
                 if (lineSum + charLength < lineLength && character != '\n')
                 {
@@ -167,33 +188,26 @@ namespace FontRenderer.Builders
 
                 // VERTICES
 
-                var localOffset = new Vector2(data.Offset.X / (float)font.GivenSize, data.Offset.Y / (float)font.GivenSize);
-                var localHeight = (float)data.Height / (float)font.GivenSize;
-                var localWidth = (float)data.Width / (float)font.GivenSize;
+                vertexBuffer.Add(new Vector2(cursor.X + data.LocalOffset.X, cursor.Y - data.LocalOffset.Y)); // top left
+                vertexBuffer.Add(new Vector2(cursor.X + data.LocalOffset.X, cursor.Y - data.LocalOffset.Y - data.LocalHeight)); // bottom left
+                vertexBuffer.Add(new Vector2(cursor.X + data.LocalOffset.X + data.LocalWidth, cursor.Y - data.LocalOffset.Y - data.LocalHeight)); // bottom right
+                vertexBuffer.Add(new Vector2(cursor.X + data.LocalOffset.X + data.LocalWidth, cursor.Y - data.LocalOffset.Y)); // top right
 
-                vertexBuffer.Add(new Vector2(cursor.X + localOffset.X, cursor.Y - localOffset.Y)); // top left
-                vertexBuffer.Add(new Vector2(cursor.X + localOffset.X, cursor.Y - localOffset.Y - localHeight)); // bottom left
-                vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth, cursor.Y - localOffset.Y - localHeight)); // bottom right
-                vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth, cursor.Y - localOffset.Y)); // top right
 
-                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localPadding, cursor.Y - localOffset.Y - localPadding)); // top left
-                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localPadding, cursor.Y - localOffset.Y - localHeight + localPadding)); // bottom left
-                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth - localPadding, cursor.Y - localOffset.Y - localHeight + localPadding)); // bottom right
-                //vertexBuffer.Add(new Vector2(cursor.X + localOffset.X + localWidth - localPadding, cursor.Y - localOffset.Y - localPadding)); // top right
 
 
                 // TEXTURE COORDS
 
                 Vector2 texturePosition = new Vector2(data.Position.X / font.AtlasWidth, data.Position.Y / font.AtlasHeight);
-                float textureWidth = (float)data.Width / (float)font.AtlasWidth;
-                float textureHeight = (float)data.Height / (float)font.AtlasHeight;
+                float textureWidth = (float)data.LocalWidth * font.GivenSize / (float)font.AtlasWidth;
+                float textureHeight = (float)data.LocalHeight * font.GivenSize / (float)font.AtlasHeight;
 
                 textureCoordBuffer.Add(new Vector2(texturePosition.X + texturePadding, texturePosition.Y + texturePadding)); // top left
                 textureCoordBuffer.Add(new Vector2(texturePosition.X + texturePadding, texturePosition.Y + textureHeight - texturePadding)); // bottom left
                 textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth - texturePadding, texturePosition.Y + textureHeight - texturePadding)); // bottom right
                 textureCoordBuffer.Add(new Vector2(texturePosition.X + textureWidth - texturePadding, texturePosition.Y + texturePadding)); // top right
 
-                cursor.X += (float)data.Xadvance / ((float)font.GivenSize);
+                cursor.X += data.LocalXadvance;
             }    
         }
     }
